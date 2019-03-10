@@ -28,9 +28,16 @@ Here are the steps you need to perform in order to allow you to write your vario
 ```
 * Find section `/* USER CODE BEGIN 2 */` and add the following code:
 ```c++
-
+  osThreadDef(ThreadsStarter, StartThreads, osPriorityRealtime, 0, 128);
+  osThreadCreate(osThread(ThreadsStarter), NULL);
 ```
 * Copy file Threads.cpp to /src folder.
+
+* Copy folder /Threads to the root of the project. This folder contains base class for all thread classes and two inherited classes. CUARTCommsController looks after uart channel. DebugController is general purpose controller that can be used to do anything. In this case it blinks LD2 to notify that kernel is running.
+
+* Add c++ nature to the project. File > New > Convert to a C/C++ Project (Adds C/C++ Nature).
+
+* Modify project properties to enable successful C++ build.
 ___
 # Notes
 This section contains various stuff that does not fit neatly into other sections.

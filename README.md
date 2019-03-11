@@ -21,26 +21,54 @@ Here are the steps you need to perform in order to allow you to write your vario
 
 #### C++ entry point
 * Find section `/* USER CODE BEGIN PFP */` in `main.c` and add:
-```c++
+```
     /* USER CODE BEGIN PFP */    
     extern void StartThreads(const void *);    
     /* USER CODE END PFP */    
 ```
 * Find section `/* USER CODE BEGIN 2 */` and add the following code:
-```c++
-  osThreadDef(ThreadsStarter, StartThreads, osPriorityRealtime, 0, 128);
-  osThreadCreate(osThread(ThreadsStarter), NULL);
+```
+    osThreadDef(ThreadsStarter, StartThreads, osPriorityRealtime, 0, 128);
+    osThreadCreate(osThread(ThreadsStarter), NULL);
 ```
 * Copy file Threads.cpp to /src folder.
 
-* Copy folder /Threads to the root of the project. This folder contains base class for all thread classes and two inherited classes. CUARTCommsController looks after uart channel. DebugController is general purpose controller that can be used to do anything. In this case it blinks LD2 to notify that kernel is running.
+#### Libraries
+
+* Create folder for Libraries. Use command File > New > Source Folder.    
+**N.B. It is very important that you create a "Source folder", and not just "Folder". Source folder contents will be compiled, while contents of regular folders will not. You can tell the difference between source folders and regular folders by presence of blue square with letter 'c' inside next to source folders.**   
+* Copy contents of folder Libraries to newly created folder. 
+* This folder is basic abstractions for BooleanIO, FIFOBuffer, and SoftTimer. After I wrote the SoftTimer class I found out FreeRTOS already has the concept built in, so this class will be deprecated in the future. Try to avoid using it.
+
+#### Threads (or Tasks as they are known in FreeRTOS)
+
+* Follow the same process as you did for Libraries to create a source folder called Threads.
+* Copy contents of folder Threads to newly created folder.
+* This folder contains base class for all thread classes and two inherited classes.
+* CUARTCommsController looks after UART channel. DebugController is general purpose controller that can be used to do anything. In this case it blinks LD2 to notify that kernel is running. I use DebugController when I need to create a backdoor to a GPIO port, or ADC, or perform something that overall architecture of the code would not allow or prove difficult to implement. Nothing that is supposed to remain in Release version should live in DebugController.
+
+#### Enable c++ code compilation
 
 * Add c++ nature to the project. File > New > Convert to a C/C++ Project (Adds C/C++ Nature).
+* Add new folders to list of directories. Right click on project name and select Properties.
+* In C/C++ Build > Settings > Tool Settings
+    *  Copy everything from C Compiler > Directories  to C++ Compiler > Directories
+* In C/C++ Build > Settings > Tool Settings > C++ Compiler > Directories create folders
+    * ../Threads
+    * ../Libraries
 
-* Modify project properties to enable successful C++ build.
+#### Minor improvements
+
+If you have a modern PC it is likely running a multicore processor. To speed up compilation you can enable parallel build. In project properties go to > C/C++ Build > Behaviour and tick box Enable parallel build. Check Use optimal jobs to let Eclipse determine how many cores to use. This will cause eclipse to compile multiple files in parallel.
+
+# Thread tracking
+In development
+
+# Tracealyzer integration
+In development
 ___
 # Notes
 This section contains various stuff that does not fit neatly into other sections.
 
 ### Stuff I don't know how to do
-* Folder /.settings/ contains various files that seem to change randomly depending on which machine I use to compile the code. I have what I think identical installations of toolchain on all my laptops, yet this folder keeps creeping up in my source control. I eventually got annoyed and .gitignored it. Does not seem to break anything. Code compiles and works just fine. If any of you fine folk can explain how to deal with it properly, I'd be glad to hear it.
+* Folder /.settings/ contains a file language.settings.xml that seems to change randomly depending on which machine I use to compile the code. I have what I think identical installations of toolchain on all my laptops, yet this file keeps creeping up in my source control. I eventually got annoyed and .gitignored it. Does not seem to break anything. Code compiles and works just fine. If any of you fine folk can explain how to deal with it properly, I'd be glad to hear it.

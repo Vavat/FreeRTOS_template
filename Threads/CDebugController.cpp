@@ -29,7 +29,7 @@
 #define TEMP30_CAL_VALUE		((uint16_t*)((uint32_t)0x1FFF75CA))
 
 CDebugController::CDebugController() :
-m_Heartbeat(LD2_GPIO_Port, LD2_Pin){
+m_Heartbeat(GPIOA, GPIO_PIN_2){
 	// TODO Auto-generated constructor stub
 
 }
@@ -48,10 +48,6 @@ void CDebugController::Run(void const * arg){
 		m_Heartbeat.Set(false);
 		osDelayUntil(&previousTime, 1000);
 	}
-}
-
-void CDebugController::RegisterADCDriver(CADCDriver* pADCDriver){
-	m_pADCDriver = pADCDriver;
 }
 
 bool CDebugController::NewCommand(char const * const command, char * const reply){
@@ -82,28 +78,5 @@ bool CDebugController::NewCommand(char const * const command, char * const reply
 		return true;
 	}
 
-	if(strcmp(command, "?adc") == 0){
-		sprintf(reply, "ch1: %d, ch2: %d, ch3: %d, ch4: %d, ch5: %d, ch6: %d, ",
-				m_pADCDriver->RawData(0),
-				m_pADCDriver->RawData(1),
-				m_pADCDriver->RawData(2),
-				m_pADCDriver->RawData(3),
-				m_pADCDriver->RawData(4),
-				m_pADCDriver->RawData(5));
-		return true;
-	}
-
-	if(strcmp(command, "?uctemp") == 0){
-		float temperature = (m_pADCDriver->RawData(4) - (float)(*TEMP30_CAL_VALUE))/
-				(*TEMP110_CAL_VALUE - *TEMP30_CAL_VALUE) *
-				(110.0 - 30.0) + 30.0;
-		sprintf(reply, "Internal uC temperature: %f", temperature);
-		return true;
-	}
 	return false;
-}
-
-//Debug function call
-void ToggleLight(bool state){
-	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 }

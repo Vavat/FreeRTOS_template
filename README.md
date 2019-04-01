@@ -62,7 +62,28 @@ Here are the steps you need to perform in order to allow you to write your vario
 If you have a modern PC it is likely running a multicore processor. To speed up compilation you can enable parallel build. In project properties go to > C/C++ Build > Behaviour and tick box Enable parallel build. Check Use optimal jobs to let Eclipse determine how many cores to use. This will cause eclipse to compile multiple files in parallel.
 
 # Thread tracking
-In development
+Below are step by step instructions on how to enable task performance tracking.
+## Configuring hardware
+First of all you'll need to configure a hardware timer that'll provide clock base for measuring task run time. For the purposes of this template I'll use TIM6, since that's what I normally use for my debugging. The process is easily adaptable to any other timer. TIM6 is pretty much only suitable for timekeeping, so it's unlikely to impact hardware functionality.
+You might want to use 32 bit timer if better resolution is required, but for simple look-see of which task consumes most processor cycles 16 bit will suffice.
+* Open FreeRTOS_template.ioc project file in CubeMX
+* In Timer section select TIM6 and click to activate it
+* Configuration parameters:
+ *  Prescaler set to 79.
+ *  Counter period set to 49.
+At 80MHz base clock of my STM32L476, these settings trigger an overflow event every 50us.
+80MHz/(79+1) = 1MHz, which is 1us
+1us * (49+1) = 50us base timing unit.
+This number is essentially the resolution at which you measure task time consumption. If you require higher resolution, either reduce the Prescaler or reduce Counter period.
+* Click Generate code and wait until CubeMX is finished updating code.
+* Open FreeRTOSConfig.h and add following code.
+ * Enable stack high water mark tracking
+    `#define configRECORD_STACK_HIGH_ADDRESS 1`
+ * Enable trace facility (this will also be used to enable Tracealyzer)
+    `#define configUSE_TRACE_FACILITY 1`
+ * 
+
+In order to enable collection of task performance data you'll need to do some code modifications. Also, some of the MCU hardware, specifically, a timer will be needed.
 
 # Tracealyzer integration
 In development

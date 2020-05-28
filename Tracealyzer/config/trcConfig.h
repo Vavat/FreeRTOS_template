@@ -61,7 +61,8 @@ extern "C" {
  * required at least for the ARM Cortex-M port, that uses the ARM CMSIS API.
  * Try that in case of build problems. Otherwise, remove the #error line below.
  *****************************************************************************/
-#error "Trace Recorder: Please include your processor's header file here and remove this line."
+//#error "Trace Recorder: Please include your processor's header file here and remove this line."
+#include "stm32l4xx.h"
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_HARDWARE_PORT
@@ -81,7 +82,7 @@ extern "C" {
  * See trcHardwarePort.h for available ports and information on how to
  * define your own port, if not already present.
  ******************************************************************************/
-#define TRC_CFG_HARDWARE_PORT TRC_HARDWARE_PORT_NOT_SET
+#define TRC_CFG_HARDWARE_PORT TRC_HARDWARE_PORT_ARM_Cortex_M
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_RECORDER_MODE
@@ -122,7 +123,7 @@ extern "C" {
  * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
  * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1 or later
  *****************************************************************************/
-#define TRC_CFG_FREERTOS_VERSION FREERTOS_VERSION_NOT_SET
+#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_0_1
 
 /*******************************************************************************
  * TRC_CFG_SCHEDULING_ONLY

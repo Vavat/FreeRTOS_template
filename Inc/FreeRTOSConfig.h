@@ -44,6 +44,8 @@
 
 /* USER CODE BEGIN Includes */   	      
 /* Section where include file can be added */
+#define configUSE_TRACE_FACILITY 1
+#include "trcRecorder.h"
 /* USER CODE END Includes */ 
 
 /* Ensure stdint is only used by the compiler, and not the assembler. */

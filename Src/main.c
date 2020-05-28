@@ -123,6 +123,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  /* Start tracealyzer. Change to TRC_START_AWAIT_HOST if you want code to halt until host PC connects.
+   * This line must be before any thread operations commence, but after all hardware is configured. */
+  vTraceEnable(TRC_START_AWAIT_HOST);
   osThreadDef(ThreadsStarter, StartThreads, osPriorityRealtime, 0, 128);
   osThreadCreate(osThread(ThreadsStarter), NULL);
   /* USER CODE END 2 */

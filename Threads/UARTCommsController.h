@@ -14,7 +14,6 @@
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal.h"
 
-
 #define MAX_COMMAND_SIZE 300
 
 class UARTCommsController {
@@ -116,6 +115,7 @@ private:
   int m_ControllerCount;
 
   bool m_bTestVariable;
+  float m_AnotherTestVariable;
 };
 
 #endif /* UARTCOMMSCONTROLLER_H_ */

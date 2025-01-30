@@ -167,6 +167,7 @@ void UARTCommsController::Run() {
 // TODO: refactor method to stop using local char[] variable. Too much memory
 // use.
 int UARTCommsController::SendReply(char *pReply) {
+  m_AnotherTestVariable = 100;
   unsigned int CheckSum = 0;
   unsigned int CharCounter = 0;
   taskENTER_CRITICAL();
